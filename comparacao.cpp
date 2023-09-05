@@ -25,7 +25,6 @@
 //Vetores usados pelos métodos de ordenação
 int *vetorQuickSort;
 int *vetorBubbleSort;
-int tamanho;
 
 //Função usada pelo qsort para comparar dois numeros
 int compare_ints( const void* a, const void* b ) {
@@ -70,29 +69,36 @@ void criarVetor(int tamanhoVetor, int semente){
 int main ()
 {
 	//Tamanho do vetor
-	int tam[] = {1000,2000,3000,4000,5000,6000,7000,8000,9000,10000};
-	clock_t clk[30];
-	int i;
+	int base = 10000;
+	int num_testes = 10;
+	int tam[num_testes];
+	for (int i = 0; i<num_testes; i++) tam[i] = (i + 1)*base;
+	clock_t clk[3*num_testes];
 	
-	for (i = 0; i < 10; i++) {
+	
+	for (int i = 0; i < 10; i++) {
 		//Criar vetor com elementos aleatorios[0,100000] 
-		criarVetor(tam[i],23);
-		
+		criarVetor(tam[i],233);
+		//printf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", vetorQuickSort[0], vetorQuickSort[1], vetorQuickSort[2], vetorQuickSort[3], vetorQuickSort[4], vetorQuickSort[5], vetorQuickSort[6], vetorQuickSort[7], vetorQuickSort[8], vetorQuickSort[9], vetorQuickSort[10], vetorQuickSort[11], vetorQuickSort[12], vetorQuickSort[13], vetorQuickSort[14]);
 		clk[3*i] = clock();
+		//printf("%lu\n", clk[3*i]);
 		
 		//Ordenar utilizando quickSort
 		qsort (vetorQuickSort, tam[i], sizeof(int), compare_ints);
 		
 		clk[3*i + 1] = clock();
+		//printf("%lu\n", clk[3*i+1]);
+		//printf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", vetorQuickSort[0], vetorQuickSort[1], vetorQuickSort[2], vetorQuickSort[3], vetorQuickSort[4], vetorQuickSort[5], vetorQuickSort[6], vetorQuickSort[7], vetorQuickSort[8], vetorQuickSort[9], vetorQuickSort[10], vetorQuickSort[11], vetorQuickSort[12], vetorQuickSort[13], vetorQuickSort[14]);
+		
 		
 		//Ordenar utilizando bubleSort
 		bubbleSort(vetorBubbleSort, tam[i]);
 		
 		clk[3*i + 2] = clock();
 		
-		printf("Iteração: %d\n", i+1);
-		printf("Tempo do QuickSort: %lu\n", clk[3*i + 1] - clk[3*i]);
-		printf("Tempo do BubbleSort: %lu\n", clk[3*i + 2] - clk[3*i]);
+		printf("Itera��o: %d\n", i+1);
+		printf("Tempo do QuickSort: %lu = %lu - %lu\n", clk[3*i + 1] - clk[3*i], clk[3*i + 1], clk[3*i]);
+		printf("Tempo do BubbleSort: %lu = %lu - %lu\n", clk[3*i + 2] - clk[3*i + 1], clk[3*i + 2], clk[3*i + 1]);
 	}
 	
 	exit(0);
