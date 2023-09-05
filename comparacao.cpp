@@ -76,7 +76,7 @@ int main ()
 	clock_t clk[3*num_testes];
 	
 	
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < num_testes; i++) {
 		//Criar vetor com elementos aleatorios[0,100000] 
 		criarVetor(tam[i],233);
 		//printf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", vetorQuickSort[0], vetorQuickSort[1], vetorQuickSort[2], vetorQuickSort[3], vetorQuickSort[4], vetorQuickSort[5], vetorQuickSort[6], vetorQuickSort[7], vetorQuickSort[8], vetorQuickSort[9], vetorQuickSort[10], vetorQuickSort[11], vetorQuickSort[12], vetorQuickSort[13], vetorQuickSort[14]);
