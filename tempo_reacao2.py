@@ -89,8 +89,8 @@ def test_screen():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_q]:
       state = 0
-    elif ((reacted == False) and (r and target == 0)):
-      total_time = total_time + pygame.time.get_ticks()
+    elif ((reacted == False) and r):
+      #total_time = total_time + pygame.time.get_ticks()
       score = score + 1
       reacted = True
   else:
