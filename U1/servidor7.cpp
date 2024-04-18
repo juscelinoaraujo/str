@@ -22,6 +22,7 @@
 
 int main( )
 {
+    int tam = 1024;
     int server_sockfd, client_sockfd;
     size_t server_len;
     socklen_t client_len;
@@ -52,7 +53,7 @@ int main( )
     
     //listen(server_sockfd, 5);
     while(1){
-        char vetor_ch[4];
+        char vetor_ch[tam];
         
         printf("Servidor esperando ...\n");
         
@@ -64,7 +65,7 @@ int main( )
             perror(" erro no RECVFROM( )");
             exit(1);
         }
-        for(int i =0; i<4;i++) {
+        for(int i =0; i<tam;i++) {
             vetor_ch[i]++;
         }
         sendto(server_sockfd, vetor_ch, sizeof(vetor_ch),0,(struct sockaddr *) &client_address,sizeof(struct sockaddr));

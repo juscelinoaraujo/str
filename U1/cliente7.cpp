@@ -27,11 +27,18 @@ int main( )
     socklen_t len_recv;
     struct sockaddr_in address;
     int result;
-    //char vetor_ch[4] = {'A','B','C','D'};
-    char vetor_ch[4] = {'A'};
+    int tam = 1024;
+    char vetor_ch[tam];
+    //char vetor_ch[4] = {'A'};
     clock_t time_0, time_1;
-    float diff_time;
+    float diff_time[100];
+    float average_time = 0;
     
+    for (int i = 0; i < tam; i++)
+    {
+        vetor_ch[i]='A';
+    }
+        
     
     unsigned short porta = 9734;
     
@@ -47,20 +54,29 @@ int main( )
     
     printf("O cliente vai enviar a mensagem para o servidor \n");
     
-    time_0 = clock();
-    sendto(sockfd,  vetor_ch,sizeof(vetor_ch),0,(struct sockaddr *) &address, len);
-    recvfrom(sockfd, vetor_ch,sizeof(vetor_ch),0,(struct sockaddr *) &address,&len_recv);
-    //sleep(1);
-    time_1 = clock();
-    diff_time = 1000*((float) time_1 - time_0)/CLOCKS_PER_SEC;
+    for (int i = 0; i < 100; i++)
+    {
+        time_0 = clock();
+        sendto(sockfd,  vetor_ch,sizeof(vetor_ch),0,(struct sockaddr *) &address, len);
+        recvfrom(sockfd, vetor_ch,sizeof(vetor_ch),0,(struct sockaddr *) &address,&len_recv);
+        time_1 = clock();
+        diff_time[i] = 1000*((float) time_1 - time_0)/CLOCKS_PER_SEC;
+    }
+    
+    for (int i = 0; i < 100; i++)
+    {
+        average_time += diff_time[i];
+    }
+    average_time /= 200;
+    
     // send(sockfd,  vetor_ch,sizeof(vetor_ch),0);
     // recv(sockfd, vetor_ch,sizeof(vetor_ch),0);
     //write(sockfd,  vetor_ch,sizeof(vetor_ch));
     //read(sockfd, vetor_ch,sizeof(vetor_ch));
     
-    printf( "Caracter vindo do servidor = %c %c %c %c\n",vetor_ch[0],vetor_ch[1],vetor_ch[2],vetor_ch[3]);
-    printf("Tempo total = %ld - %ld = %f\n", time_1, time_0, diff_time);
-
+    //printf( "Caracter vindo do servidor = %c %c %c %c\n",vetor_ch[0],vetor_ch[1],vetor_ch[2],vetor_ch[3]);
+    printf("Tempo medio = %f", average_time);
+    //printf("%ld\n", sizeof(vetor_ch));
     //printf("Tempo total = %ld - %ld = %f", time_1, time_0, CLOCKS_PER_SEC);
     close(sockfd);
     exit(0);
