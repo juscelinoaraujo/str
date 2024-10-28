@@ -31,8 +31,8 @@ int main( )
     socklen_t len_recv;
     struct sockaddr_in address;
     int result;
-    int num_iteracoes = 1000;
-    float coeficiente = (float) 1/num_iteracoes;
+    int num_iteracoes = 50;
+    float coeficiente = (float) 1000/(num_iteracoes*CLOCKS_PER_SEC);
     //time_t tempo_envio[50], tempo_recebimento[50];
     clock_t tempo_envio[50], tempo_recebimento[50];
     unsigned long int tempo_medio;
@@ -70,7 +70,7 @@ int main( )
     sockfd  = socket(AF_INET, SOCK_DGRAM, 0);  // criacao do socket
     
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = inet_addr("192.168.67.107");
+    address.sin_addr.s_addr = inet_addr("127.0.0.1"); //loopback
     //address.sin_addr.s_addr = inet_addr("192.168.67.108");
     address.sin_port = htons(porta);
     
@@ -96,10 +96,10 @@ int main( )
         //}
         tempo_medio += (tempo_recebimento[i] - tempo_envio[i]);
     }
-    printf("\n\nTempo médio para 64 bytes = %f\n", coeficiente*tempo_medio);
+    printf("\n\nTempo médio para 64 bytes = %f ms\n", coeficiente*tempo_medio);
     
     tempo_medio = 0;
-    for(int i = 0; i<50; i++){
+    for(int i = 0; i<num_iteracoes; i++){
         tempo_envio[i] = clock();
         //tempo_envio[i] = time( (time_t *) 0);  // apontando o ponteiro para null.
         //cout << tempo_envio[i];
@@ -115,10 +115,10 @@ int main( )
         //}
         tempo_medio += (tempo_recebimento[i] - tempo_envio[i]);
     }
-    printf("\n\nTempo médio para 128 bytes = %f\n", 0.02*tempo_medio);
+    printf("\n\nTempo médio para 128 bytes = %f ms\n", coeficiente*tempo_medio);
     
     tempo_medio = 0;
-    for(int i = 0; i<50; i++){
+    for(int i = 0; i<num_iteracoes; i++){
         tempo_envio[i] = clock();
         //tempo_envio[i] = time( (time_t *) 0);  // apontando o ponteiro para null.
         //cout << tempo_envio[i];
@@ -134,10 +134,10 @@ int main( )
         //}
         tempo_medio += (tempo_recebimento[i] - tempo_envio[i]);
     }
-    printf("\n\nTempo médio para 256 bytes = %f\n", 0.02*tempo_medio);
+    printf("\n\nTempo médio para 256 bytes = %f ms\n", coeficiente*tempo_medio);
     
     tempo_medio = 0;
-    for(int i = 0; i<50; i++){
+    for(int i = 0; i<num_iteracoes; i++){
         tempo_envio[i] = clock();
         //tempo_envio[i] = time( (time_t *) 0);  // apontando o ponteiro para null.
         //cout << tempo_envio[i];
@@ -153,10 +153,10 @@ int main( )
         //}
         tempo_medio += (tempo_recebimento[i] - tempo_envio[i]);
     }
-    printf("\n\nTempo médio para 512 bytes = %f\n", 0.02*tempo_medio);
+    printf("\n\nTempo médio para 512 bytes = %f ms\n", coeficiente*tempo_medio);
     
     tempo_medio = 0;
-    for(int i = 0; i<50; i++){
+    for(int i = 0; i<num_iteracoes; i++){
         tempo_envio[i] = clock();
         //tempo_envio[i] = time( (time_t *) 0);  // apontando o ponteiro para null.
         //cout << tempo_envio[i];
@@ -172,7 +172,7 @@ int main( )
         //}
         tempo_medio += (tempo_recebimento[i] - tempo_envio[i]);
     }
-    printf("\n\nTempo médio para 1024 bytes = %f\n", 0.02*tempo_medio);
+    printf("\n\nTempo médio para 1024 bytes = %f ms\n", coeficiente*tempo_medio);
     
     close(sockfd);
     exit(0);
