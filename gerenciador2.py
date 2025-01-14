@@ -8,6 +8,10 @@ import subprocess
 import os
 import time
 
+#from pygame_widgets.progressbar import ProgressBar
+
+#startTime = time.time()
+
 tem_filtro = [False]
 #pid = [""]
 filtro = [""]
@@ -68,6 +72,8 @@ pygame.display.set_caption("Gerenciador de Processos")
 
 fonte = pygame.font.SysFont('monospace', 15)
 
+#progressBar = ProgressBar(screen, 100, 100, 500, 40, lambda: 1 - (time.time() - startTime) / 10, curved=True)
+
 string_pid = "PID"
 string_filtro = "Filtro"
 texto_pid = fonte.render(string_pid, True, "black", "grey")
@@ -122,7 +128,7 @@ while run:
   screen.blit(texto_filtro, (40, 150)) 
   pygame.draw.rect(screen, 'white', [0, 240, 1000, SCREEN_HEIGHT - 240])
   if tem_filtro[0] == True:
-    print("ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | grep -E '" + filtro[0] + "|^USER' | head -n 21")
+    #print("ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | grep -E '" + filtro[0] + "|^USER' | head -n 21")
     comando = "ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | grep -E '" + filtro[0] + "|^USER' | head -n 21"   
   else:
     comando = "ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | head -n 21"
