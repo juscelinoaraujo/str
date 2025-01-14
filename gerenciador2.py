@@ -9,19 +9,16 @@ import os
 import time
 
 tem_filtro = [False]
-pid = [""]
+#pid = [""]
 filtro = [""]
+
 n_cpu = []
 for i in range(int(subprocess.getoutput("nproc"))):
   n_cpu.append(str(i))
-prioridade = []
-for i in range(21):
-  prioridade.append(str(i))
-
-
-def selecionar_pid():
-  a = 5
-  pid[0] = textbox_pid.getText()
+n_cpu.append("desfazer")
+#prioridade = []
+#for i in range(21):
+#  prioridade.append(str(i))
   
 def kill_processo():
   pid = textbox_pid.getText()
@@ -38,12 +35,22 @@ def cont_processo():
   os.system("kill -18 " + pid)
   
 def aplicar():
+  pid = textbox_pid.getText()
   cpu = dropdown_cpu.getSelected()
-  prio = dropdown_prio.getSelected()
+  #prio = dropdown_prio.getSelected()
+  prio = str(slider_prio.getValue())
   if cpu != None:
     print("cpu = " + cpu)
+    if cpu == "desfazer":
+      print("taskset -p " + pid)
+      os.system("taskset -p " + pid)
+    else:
+      print("taskset -pc --cpu-list " + cpu + " " + pid)
+      os.system("taskset -pc --cpu-list " + cpu + " " + pid)
+    #os.system("tasket ")
   if prio != None:
-    print("cpu = " + prio)
+    print("renice " + prio + " " + pid)
+    os.system("renice " + prio + " " + pid)
 
 def filtrar():
   tem_filtro[0] = True
@@ -55,7 +62,7 @@ def limpar_filtro():
 
 pygame.init()
 SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 640
+SCREEN_HEIGHT = 670
 screen = pygame.display.set_mode((SCREEN_WIDTH,SCREEN_HEIGHT))
 pygame.display.set_caption("Gerenciador de Processos")
 
@@ -68,8 +75,7 @@ texto_filtro = fonte.render(string_filtro, True, "black", "grey")
 
 
 textbox_pid = TextBox(screen, 120, 50, 100, 30, font=fonte,
-                  borderColour=(255, 0, 0),
-                  onSubmit=selecionar_pid)
+                  borderColour=(255, 0, 0))
                   
 textbox_filtro = TextBox(screen, 120, 150, 100, 30, font=fonte,
                   borderColour=(255, 0, 0),
@@ -87,8 +93,14 @@ button_limpar = Button(screen, 300, 150, 90, 30, text="limpar",
 dropdown_cpu = Dropdown(screen, 670, 50, 90, 30, name='cpu', choices=n_cpu, 
                         direction='down', font = fonte)
                         
-dropdown_prio = Dropdown(screen, 770, 50, 90, 30, name='prio', choices=prioridade, 
-                         direction='down', font = fonte)
+#dropdown_prio = Dropdown(screen, 770, 50, 90, 30, name='prio', choices=prioridade, 
+#                         direction='down', font = fonte)
+                         
+slider_prio = Slider(screen, 770, 100, 90, 10, min=0, max=19, step=1, 
+                     initial = 0, handleColour=(255,255,255), colour =(0,0,0))
+
+output_prio = TextBox(screen, 770, 50, 90, 30, font=fonte)
+output_prio.disable()  # Act as label instead of textbox
                          
 button_aplicar = Button(screen, 870, 50, 90, 30, text="aplicar", 
                      font=fonte, onClick=aplicar)                         
@@ -105,13 +117,15 @@ while run:
       quit()
 
   screen.fill('grey')
+  output_prio.setText(slider_prio.getValue())
   screen.blit(texto_pid, (40, 50)) 
   screen.blit(texto_filtro, (40, 150)) 
   pygame.draw.rect(screen, 'white', [0, 240, 1000, SCREEN_HEIGHT - 240])
   if tem_filtro[0] == True:
-    comando = "ps -eo pid,ppid,pri,pcpu,pmem,stat,comm --sort=-pcpu | grep " + filtro[0] + " | head -n 20"
+    print("ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | grep -E '" + filtro[0] + "|^USER' | head -n 21")
+    comando = "ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | grep -E '" + filtro[0] + "|^USER' | head -n 21"   
   else:
-    comando = "ps -eo pid,ppid,pri,pcpu,pmem,stat,comm --sort=-pcpu | head -n 20"
+    comando = "ps -eo user,pid,ppid,ni,pcpu,pmem,stat,comm --sort=-pcpu | head -n 21"
   proc_info = subprocess.getoutput(comando)
   proc_info = proc_info.split("\n")
   proc_texto = []
